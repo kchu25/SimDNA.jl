@@ -2,7 +2,7 @@ module SimDNA
 
 using Distributions, CUDA
 
-export SimDNA
+export Sim_DNA
 
 include("ground_truth_setup.jl")
 include("sample.jl")
