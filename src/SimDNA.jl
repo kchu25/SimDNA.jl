@@ -2,12 +2,13 @@ module SimDNA
 
 using Distributions, CUDA
 
-include("src/ground_truth_setup.jl")
-include("src/sample.jl")
-include("src/helpers.jl")
-include("src/save.jl")
-include("src/sim_wrapper.jl")
+export SimDNA
 
+include("ground_truth_setup.jl")
+include("sample.jl")
+include("helpers.jl")
+include("save.jl")
+include("sim_wrapper.jl")
 
 
 

@@ -35,7 +35,7 @@ struct Sim_DNA{T <: Integer, S <: Real}
     end
     
     function Sim_DNA{T,S}(motif::motif_type, 
-                          num_data_pts::Integer, 
+                          num_data_pts::Integer; 
                           data_pt_len::Integer=100,
                           bern_prob::Real=1.0) where {T <: Integer, S <: Real}     
         raw_data = sample_backgound_with_motif_multiple(motif,num_data_pts,data_pt_len,bern_prob);
