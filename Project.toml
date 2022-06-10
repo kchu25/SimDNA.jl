@@ -1,0 +1,13 @@
+name = "SimDNA"
+uuid = "f325a362-c78e-481f-886d-076c680a7e4a"
+authors = ["Shane Kuei Hsien Chu (skchu@wustl.edu)"]
+version = "0.1.0"
+
+[compat]
+julia = "1.7.2"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
