@@ -4,3 +4,15 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://kchu25.github.io/SimDNA.jl/dev/)
 [![Build Status](https://github.com/kchu25/SimDNA.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/kchu25/SimDNA.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/kchu25/SimDNA.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/kchu25/SimDNA.jl)
+
+
+Yes, we can generate synthetic DNA sequence motifs datasets in a very simple way -- i.i.d. background, and a profile that represents a motif generated from a product multinomial (i.e., PWMs) -- and then we plant the realization of the profile at some randomly chosen sequence at each sequence. But this is an easy problem to solve. How about we simulate the motif as a mixture of profiles, where each profile may overlap each other? Moreover, what if the motif has blocked structures such that variable spacings exist between each block? This package creates such patterns.
+
+
+# Basic examples
+
+Coming soon
+
+# Example patterns not discoverable by motif finding methods
+
+Coming soon
