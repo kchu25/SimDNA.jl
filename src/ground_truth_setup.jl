@@ -79,65 +79,65 @@ Base.rand(v::product_categorical) = [rand(v.pc[i]) for i = 1:v.len];
 
 
 # motifs definitions
-struct single_part_motif
+struct single_block_motif
     P::product_categorical # P stands for probability measure
     len::Int64
-    function single_part_motif(L::T) where T <: Integer
+    function single_block_motif(L::T) where T <: Integer
         new(product_categorical(L, 4, motif_alpha_pc), L)
     end
-    function single_part_motif(mat::Matrix{T}) where T <: Real
+    function single_block_motif(mat::Matrix{T}) where T <: Real
         new(product_categorical(mat), size(mat,1));
     end
 end
 
 # example ----------------------------------
-# a = single_part_motif(5);
+# a = single_block_motif(5);
 # view(a)
 # ------------------------------------------
 
 # an intermediate type for gap motifs
-struct k_parts_motif
-    P::Vector{single_part_motif}
+struct k_block_motif
+    P::Vector{single_block_motif}
     K::Int64
     """
-    K: number of parts in the motif
+    K: number of blocks in the motif
     L_vec: vector of lengths L's for each product categorical
     """
-    function k_parts_motif(length_vec::Vector{Int})
+    function k_block_motif(length_vec::Vector{Int})
         K = length(length_vec);
-        new([single_part_motif(length_vec[i]) for i = 1:K], K)
+        new([single_block_motif(length_vec[i]) for i = 1:K], K)
     end
 end
 
 #= 
-motif with k parts and gaps in between every adjacent parts
+motif with k blocks and gaps in between every adjacent blocks
 Input:
-    L_vec:      Length of each of the parts of the motif
-    gap_vec:    Length of each of the gap in between parts --
+    L_vec:      Length of each of the blocks of the motif
+    gap_vec:    Length of each of the gap in between blocks --
                 gap_vecᵢ specifies the gap in between ith and 
                 (i+1)th part        
     gap_dist:   Multinomial that generates the alphabets in an i.i.d fashion
 =# 
 
-struct gapped_k_parts_motif
-    P_motifs::k_parts_motif
-    gap_len::Vector{Int}    # the maximal gap length that can occur in between each parts
+struct gapped_k_block_motif
+    P_motifs::k_block_motif
+    gap_len::Vector{Int}    # the maximal gap length that can occur in between each blocks
     P_gap::Categorical{Float64, Vector{Float64}}
     K::Int
-    function gapped_k_parts_motif(L_vec::Vector{T}, gap_vec::Vector{T}, gap_dist=bg_array) where T <: Integer       
+    function gapped_k_block_motif(L_vec::Vector{T}, gap_vec::Vector{T}, gap_dist=bg_array) where T <: Integer       
         K = length(L_vec);
         @assert length(gap_vec) == K-1 "Length of the gap_vec (2nd argument) must be length(L_vec)-1"
-        new(k_parts_motif(L_vec), gap_vec, Categorical(gap_dist), K)
+        new(k_block_motif(L_vec), gap_vec, Categorical(gap_dist), K)
     end
 end
 
 
-struct mixture_gapped_k_parts_motifs
+struct mixture_gapped_k_block_motifs
     modes::Vector{UnitRange{Int}} # inclusive
     mixture_weights::cat_d
-    motif::gapped_k_parts_motif
+    motif::gapped_k_block_motif
     num_modes::Int
-    function mixture_gapped_k_parts_motifs(
+    function mixture_gapped_k_block_motifs(
         L_vec::Vector{Int}, 
         gap_vec::Vector{Int}, 
         modes::Vector{UnitRange{Int64}},
@@ -146,7 +146,7 @@ struct mixture_gapped_k_parts_motifs
         num_modes = length(modes);
         new(modes, 
             Categorical(rand(Dirichlet(num_modes, mixture_weights_alpha))),
-            gapped_k_parts_motif(L_vec, gap_vec, gap_dist),         
+            gapped_k_block_motif(L_vec, gap_vec, gap_dist),         
             num_modes
         )
     end
@@ -154,27 +154,27 @@ end
 
 # a simpler mixture motif than the one above
 
-struct mixture_k_parts_motifs
+struct mixture_k_block_motifs
     modes::Vector{UnitRange{Int}} # inclusive
     mixture_weights::cat_d
-    motif::single_part_motif
+    motif::single_block_motif
     num_modes::Int
-    function mixture_k_parts_motifs(modes::Vector{UnitRange{Int64}})   
+    function mixture_k_block_motifs(modes::Vector{UnitRange{Int64}})   
         K = max_v(modes);
         num_modes = length(modes);
         new(modes, 
             Categorical(rand(Dirichlet(num_modes, mixture_weights_alpha))),
-            single_part_motif(K),            
+            single_block_motif(K),            
             num_modes
         )
     end
 end
 
 # motif type
-const motif_type = Union{single_part_motif, 
-                         gapped_k_parts_motif, 
-                         mixture_k_parts_motifs,
-                         mixture_gapped_k_parts_motifs
+const motif_type = Union{single_block_motif, 
+                         gapped_k_block_motif, 
+                         mixture_k_block_motifs,
+                         mixture_gapped_k_block_motifs
 };
 
 # type for a (simulated) single dna background string with a motif in it 
