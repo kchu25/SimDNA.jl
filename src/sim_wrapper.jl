@@ -34,14 +34,14 @@ struct Sim_DNA{T <: Integer, S <: Real}
         )
     end
     
-    function Sim_DNA{T,S}(motif::motif_type, 
-                          num_data_pts::Integer; 
-                          data_pt_len::Integer=100,
+    function Sim_DNA{T,S}(motif::motif_type; 
+                          num_seqs::Integer=1000,
+                          seq_len::Integer=100,
                           bern_prob::Real=1.0) where {T <: Integer, S <: Real}     
-        raw_data = sample_backgound_with_motif_multiple(motif,num_data_pts,data_pt_len,bern_prob);
+        raw_data = sample_backgound_with_motif_multiple(motif,num_seqs,seq_len,bern_prob);
         data_matrix = data_2_dummy(raw_data; F=S);
         new(
-            raw_data, motif, T(num_data_pts), T(size(data_matrix,1)/4),
+            raw_data, motif, T(num_seqs), T(size(data_matrix,1)/4),
             data_matrix, nothing, nothing, nothing, S(bern_prob)
         )                          
     end

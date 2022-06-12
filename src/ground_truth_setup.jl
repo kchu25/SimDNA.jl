@@ -132,12 +132,12 @@ struct gapped_k_block_motif
 end
 
 
-struct mixture_gapped_k_block_motifs
+struct mixture_gapped_k_block_motif
     modes::Vector{UnitRange{Int}} # inclusive
     mixture_weights::cat_d
     motif::gapped_k_block_motif
     num_modes::Int
-    function mixture_gapped_k_block_motifs(
+    function mixture_gapped_k_block_motif(
         L_vec::Vector{Int}, 
         gap_vec::Vector{Int}, 
         modes::Vector{UnitRange{Int64}},
@@ -154,12 +154,12 @@ end
 
 # a simpler mixture motif than the one above
 
-struct mixture_k_block_motifs
+struct mixture_k_block_motif
     modes::Vector{UnitRange{Int}} # inclusive
     mixture_weights::cat_d
     motif::single_block_motif
     num_modes::Int
-    function mixture_k_block_motifs(modes::Vector{UnitRange{Int64}})   
+    function mixture_k_block_motif(modes::Vector{UnitRange{Int64}})   
         K = max_v(modes);
         num_modes = length(modes);
         new(modes, 
@@ -173,8 +173,8 @@ end
 # motif type
 const motif_type = Union{single_block_motif, 
                          gapped_k_block_motif, 
-                         mixture_k_block_motifs,
-                         mixture_gapped_k_block_motifs
+                         mixture_k_block_motif,
+                         mixture_gapped_k_block_motif
 };
 
 # type for a (simulated) single dna background string with a motif in it 

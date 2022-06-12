@@ -61,26 +61,26 @@ view(m::gapped_k_block_motif) = view(m.P_motifs);
 
 # Sample the ith mode of the motif, a gapped_p_fam_k_motif
 
-function sample_m(m::mixture_gapped_k_block_motifs)::String
+function sample_m(m::mixture_gapped_k_block_motif)::String
     i = rand(m.mixture_weights);
     sample_contiguous_subset(m.motif, m.modes[i]); 
 end
 
-function sample_whole(m::mixture_gapped_k_block_motifs)
+function sample_whole(m::mixture_gapped_k_block_motif)
     i = rand(m.mixture_weights);
     str = sample_contiguous_subset(m.motif, m.modes[i]);
     (motif=str, mode=i);
 end
 
 # example ----------------------------------
-# a=mixture_gapped_k_block_motifs([7,7,7],[4,4],[1:2,2:3]);
+# a=mixture_gapped_k_block_motif([7,7,7],[4,4],[1:2,2:3]);
 # a.modes
 # a.num_modes
 # a.mixture_weights.p
 # rand(a.mixture_weights)
 # sample_m(a)
 
-# b = mixture_gapped_k_block_motifs([1:9, 6:12, 8:15], "uniform");
+# b = mixture_gapped_k_block_motif([1:9, 6:12, 8:15], "uniform");
 # b.modes
 # b.num_modes
 # b.mixture_weights.p
@@ -91,12 +91,12 @@ end
 #=
 Sample the ith mode of the motif, a mixture_p_fam_motifs
 =#
-function sample_m(m::mixture_k_block_motifs)::String
+function sample_m(m::mixture_k_block_motif)::String
     i = rand(m.mixture_weights);
     sample_contiguous_subset(m.motif, m.modes[i]); 
 end
 
-function sample_whole(m::mixture_k_block_motifs)
+function sample_whole(m::mixture_k_block_motif)
     i = rand(m.mixture_weights);
     str = sample_contiguous_subset(m.motif, m.modes[i]);
     # println("mode $i");
@@ -104,7 +104,7 @@ function sample_whole(m::mixture_k_block_motifs)
 end
 
 # example ----------------------------------
-# a = mixture_k_block_motifs([1:9, 3:8, 6:15]);
+# a = mixture_k_block_motif([1:9, 3:8, 6:15]);
 # a.modes
 # a.num_modes
 # a.mixture_weights.p
@@ -178,7 +178,7 @@ end
 # sample_a.mode
 # sample_a[1][sample_a.motif_where]
 
-# b = mixture_gapped_k_block_motifs([3,3,3],[2,2],[1:2,2:3]);
+# b = mixture_gapped_k_block_motif([3,3,3],[2,2],[1:2,2:3]);
 # sample_b = sample_backgound_with_motif_single(b);
 # sample_b
 # sample_b.mode
@@ -205,7 +205,7 @@ function sample_backgound_with_motif_multiple(
 end
 
 # example ----------------------------------
-# b = mixture_gapped_k_block_motifs([3,3,3],[2,2],[1:2,2:3]);
+# b = mixture_gapped_k_block_motif([3,3,3],[2,2],[1:2,2:3]);
 # sample_b = sample_backgound_with_motif_multiple(b, 5);
 # sample_b
 # ------------------------------------------
