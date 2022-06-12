@@ -1,22 +1,22 @@
-len(m::single_part_motif) = m.len;
-# view(m::single_part_motif) = @pt :header = DNA_char_cap view(m.P); 
-sample_m(m::single_part_motif)::String = join([DNA_char_cap[i] for i in rand(m.P)]);
-sample_whole(m::single_part_motif) = (motif=sample_m(m), mode=1);
+len(m::single_block_motif) = m.len;
+# view(m::single_block_motif) = @pt :header = DNA_char_cap view(m.P); 
+sample_m(m::single_block_motif)::String = join([DNA_char_cap[i] for i in rand(m.P)]);
+sample_whole(m::single_block_motif) = (motif=sample_m(m), mode=1);
 
-function sample_contiguous_subset(m::single_part_motif, r::UnitRange{Int})::String
+function sample_contiguous_subset(m::single_block_motif, r::UnitRange{Int})::String
     if maximum(r) > m.len || minimum(r) < 1
         error("unit range specified is not covered by 1:$(m.len)");
     end
     sample_m(m)[r] # make it Vector{String} for concatenation purposes later (sample fake data)
 end
 
-view(m::k_parts_motif) = for v in m.P view(v) end;
-sample_m(m::k_parts_motif)::String = join([sample_m(v) for v in m.P]);
-sample_vec(m::k_parts_motif) = [sample_m(v) for v in m.P];
-sample_whole(m::k_parts_motif) = (motif=sample_m(m), mode=1);
+view(m::k_block_motif) = for v in m.P view(v) end;
+sample_m(m::k_block_motif)::String = join([sample_m(v) for v in m.P]);
+sample_vec(m::k_block_motif) = [sample_m(v) for v in m.P];
+sample_whole(m::k_block_motif) = (motif=sample_m(m), mode=1);
 
 # distribution on the number of gap alphbet for now is assumed to be discrete uniform (for now)
-function sample_m(m::gapped_k_parts_motif)::String
+function sample_m(m::gapped_k_block_motif)::String
     s = [];
     parts = sample_vec(m.P_motifs);
     for i = 1:(m.K-1)
@@ -28,14 +28,14 @@ function sample_m(m::gapped_k_parts_motif)::String
     return join(s);
 end
 
-sample_whole(m::gapped_k_parts_motif) = (motif=sample_m(m), mode=1);
+sample_whole(m::gapped_k_block_motif) = (motif=sample_m(m), mode=1);
 
 #=
 sample a (contiguous) subset of gapped_p_fam_k_motif_PC 
 according to a unitrange r
 =#
 
-function sample_contiguous_subset(m::gapped_k_parts_motif, r::UnitRange{Int})::String
+function sample_contiguous_subset(m::gapped_k_block_motif, r::UnitRange{Int})::String
     r_max = maximum(r); r_min = minimum(r);
     if r_max > m.K || r_min < 1
         error("unit range specified is not covered by 1:$(m.len)");
@@ -51,36 +51,36 @@ function sample_contiguous_subset(m::gapped_k_parts_motif, r::UnitRange{Int})::S
     return join(s);
 end
 
-view(m::gapped_k_parts_motif) = view(m.P_motifs);
+view(m::gapped_k_block_motif) = view(m.P_motifs);
 
 # example ----------------------------------
-# a = gapped_k_parts_motif([3,3,3],[2,2]);
+# a = gapped_k_block_motif([3,3,3],[2,2]);
 # sample_m(a)
 # view(a)
 # ------------------------------------------
 
 # Sample the ith mode of the motif, a gapped_p_fam_k_motif
 
-function sample_m(m::mixture_gapped_k_parts_motifs)::String
+function sample_m(m::mixture_gapped_k_block_motifs)::String
     i = rand(m.mixture_weights);
     sample_contiguous_subset(m.motif, m.modes[i]); 
 end
 
-function sample_whole(m::mixture_gapped_k_parts_motifs)
+function sample_whole(m::mixture_gapped_k_block_motifs)
     i = rand(m.mixture_weights);
     str = sample_contiguous_subset(m.motif, m.modes[i]);
     (motif=str, mode=i);
 end
 
 # example ----------------------------------
-# a=mixture_gapped_k_parts_motifs([7,7,7],[4,4],[1:2,2:3]);
+# a=mixture_gapped_k_block_motifs([7,7,7],[4,4],[1:2,2:3]);
 # a.modes
 # a.num_modes
 # a.mixture_weights.p
 # rand(a.mixture_weights)
 # sample_m(a)
 
-# b = mixture_gapped_k_parts_motifs([1:9, 6:12, 8:15], "uniform");
+# b = mixture_gapped_k_block_motifs([1:9, 6:12, 8:15], "uniform");
 # b.modes
 # b.num_modes
 # b.mixture_weights.p
@@ -91,12 +91,12 @@ end
 #=
 Sample the ith mode of the motif, a mixture_p_fam_motifs
 =#
-function sample_m(m::mixture_k_parts_motifs)::String
+function sample_m(m::mixture_k_block_motifs)::String
     i = rand(m.mixture_weights);
     sample_contiguous_subset(m.motif, m.modes[i]); 
 end
 
-function sample_whole(m::mixture_k_parts_motifs)
+function sample_whole(m::mixture_k_block_motifs)
     i = rand(m.mixture_weights);
     str = sample_contiguous_subset(m.motif, m.modes[i]);
     # println("mode $i");
@@ -104,7 +104,7 @@ function sample_whole(m::mixture_k_parts_motifs)
 end
 
 # example ----------------------------------
-# a = mixture_k_parts_motifs([1:9, 3:8, 6:15]);
+# a = mixture_k_block_motifs([1:9, 3:8, 6:15]);
 # a.modes
 # a.num_modes
 # a.mixture_weights.p
@@ -172,13 +172,13 @@ function sample_backgound_with_motif_single(motif::motif_type,
 end
 
 # example ----------------------------------
-# a = gapped_k_parts_motif([3,3,3],[2,2]);
+# a = gapped_k_block_motif([3,3,3],[2,2]);
 # sample_a = sample_backgound_with_motif_single(a);
 # sample_a
 # sample_a.mode
 # sample_a[1][sample_a.motif_where]
 
-# b = mixture_gapped_k_parts_motifs([3,3,3],[2,2],[1:2,2:3]);
+# b = mixture_gapped_k_block_motifs([3,3,3],[2,2],[1:2,2:3]);
 # sample_b = sample_backgound_with_motif_single(b);
 # sample_b
 # sample_b.mode
@@ -205,7 +205,7 @@ function sample_backgound_with_motif_multiple(
 end
 
 # example ----------------------------------
-# b = mixture_gapped_k_parts_motifs([3,3,3],[2,2],[1:2,2:3]);
+# b = mixture_gapped_k_block_motifs([3,3,3],[2,2],[1:2,2:3]);
 # sample_b = sample_backgound_with_motif_multiple(b, 5);
 # sample_b
 # ------------------------------------------
