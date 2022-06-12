@@ -3,9 +3,9 @@ struct Sim_DNA{T <: Integer, S <: Real}
     motif::motif_type
     N::T
     L::T
-    data_matrix::Matrix{S}
-    data_matrix_gpu::Union{Nothing, CuArray{S,2}}
-    data_matrix_bg::Union{Nothing, Matrix{S}}
+    data_matrix::Array{S,3}
+    data_matrix_gpu::Union{Nothing, CuArray{S,3}}
+    data_matrix_bg::Union{Nothing, Array{S,3}}
     target_folder::Union{Nothing, String}
     prob_per_seq::S
 
@@ -42,6 +42,7 @@ struct Sim_DNA{T <: Integer, S <: Real}
         data_matrix = data_2_dummy(raw_data; F=S);
         L, N = size(data_matrix);
         data_matrix = reshape(data_matrix, (L,1,N));
+
         new(
             raw_data, motif, T(N), T(L/4),
             data_matrix, cu(data_matrix), nothing, nothing, S(bern_prob)
