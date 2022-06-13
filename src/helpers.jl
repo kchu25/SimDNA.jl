@@ -48,4 +48,3 @@ function data_2_dummy(dna_sim_data_vec::Vector{sim_dna_str_w_motif}; F=Float32)
     end
     return S
 end
-
