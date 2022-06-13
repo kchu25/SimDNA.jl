@@ -1,4 +1,5 @@
-struct Sim_DNA{T <: Integer, S <: Real} 
+# mutable so that shape of data can be changed 
+mutable struct Sim_DNA{T <: Integer, S <: Real} 
     raw_data::Vector{sim_dna_str_w_motif}
     motif::motif_type
     N::T
