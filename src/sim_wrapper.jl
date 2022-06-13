@@ -3,7 +3,7 @@ struct Sim_DNA{T <: Integer, S <: Real}
     motif::motif_type
     N::T
     L::T
-    data_matrix::Array{S,3}
+    data_matrix::Union{Array{S,3}, Array{S,2}}
     data_matrix_gpu::Union{Nothing, CuArray{S,3},  CuArray{S,2}}
     data_matrix_bg::Union{Nothing, Array{S,3}, Array{S,2}}
     target_folder::Union{Nothing, String}
