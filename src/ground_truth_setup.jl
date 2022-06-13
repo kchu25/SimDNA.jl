@@ -74,7 +74,7 @@ struct product_categorical
 end
 
 
-# view(v::product_categorical) = [round(v.pc[j].p[i], digits=2) for j = 1:v.len, i = 1:v.dim];
+view(v::product_categorical) = [round(v.pc[j].p[i], digits=2) for j = 1:v.len, i = 1:v.dim];
 Base.rand(v::product_categorical) = [rand(v.pc[i]) for i = 1:v.len];
 
 
