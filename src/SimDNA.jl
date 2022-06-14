@@ -1,6 +1,6 @@
 module SimDNA
 
-using CUDA, Distributions, SeqShuffle
+using CUDA, Distributions, SeqShuffle, DataFrames, CSV
 
 export Sim_DNA, 
        single_block_motif,
