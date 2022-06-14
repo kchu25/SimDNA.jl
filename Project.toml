@@ -1,7 +1,7 @@
 name = "SimDNA"
 uuid = "f325a362-c78e-481f-886d-076c680a7e4a"
 authors = ["Shane Kuei Hsien Chu (skchu@wustl.edu)"]
-version = "0.1.2"
+version = "0.1.3"
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
