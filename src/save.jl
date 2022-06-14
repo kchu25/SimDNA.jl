@@ -1,3 +1,29 @@
+function save_gt_motifs(target_folder::String, motif::mixture_gapped_k_block_motif)    
+    for j = 1:length(motif.motif.P_motifs.P)
+        gt = reduce(hcat, [motif.motif.P_motifs.P[j].P.pc[i].p for i = 1:length(motif.motif.P_motifs.P[j].P.pc)]);
+        CSV.write(target_folder*"/pfm_gt$j.csv",  Tables.table(gt), writeheader=false);
+    end     
+end
+
+function save_gt_motifs(target_folder::String, motif::gapped_k_block_motif)    
+    for j = 1:motif.K
+        gt = reduce(hcat, [motif.P_motifs.P[j].P.pc[i].p for i = 1:length(motif.P_motifs.P[j].P.pc)]);
+        CSV.write(target_folder*"/pfm_gt$j.csv",  Tables.table(gt), writeheader=false);
+    end
+end
+
+function save_gt_motifs(target_folder::String, motif::mixture_k_block_motif)    
+    for j = 1:motif.num_modes
+        gt = reduce(hcat, [motif.motif.P.pc[i].p for i = motif.modes[j]]);
+        CSV.write(target_folder*"/pfm_gt$j.csv",  Tables.table(gt), writeheader=false);
+    end
+end
+
+function save_gt_motifs(target_folder::String, motif::single_block_motif)    
+    gt = reduce(hcat, [motif.P.pc[i].p for i = 1:length(motif.P.pc)]);
+    CSV.write(target_folder*"/pfm_gt1.csv",  Tables.table(gt), writeheader=false);
+end
+
 function save_sim_data_as_fasta(target_folder::String, 
                                 raw_data, 
                                 N::Integer,
