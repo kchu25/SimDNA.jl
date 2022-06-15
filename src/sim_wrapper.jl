@@ -14,13 +14,13 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
                         num_data_pts::Integer,
                         output_folder::String,
                         data_pt_len::Integer=100,
-                        bern_prob::Real=1.0
+                        bern_prob::Real=1.0; save=false
         ) where {T <: Integer, S <: Real}        
         # simulate the data
         raw_data = sample_backgound_with_motif_multiple(motif,num_data_pts,data_pt_len,bern_prob);
         raw_data_DNA_str = [uppercase.(i.str) for i in  raw_data];
         # save the simulated data as a fasta file in the target folder
-        save_sim_data_as_fasta(output_folder, raw_data, num_data_pts, motif);
+        save && save_sim_data_as_fasta(output_folder, raw_data, num_data_pts, motif);
         data_matrix, data_matrix_bg = get_data_matrices(raw_data_DNA_str; FloatType=S);
         L, N = size(data_matrix);
         data_matrix = reshape(data_matrix, (L,1,N));
@@ -52,6 +52,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
         )                          
     end
 end
+
 
 function reshape_for_search!(s::Sim_DNA)
     s.data_matrix = reshape(s.data_matrix, (s.L,s.N));

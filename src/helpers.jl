@@ -34,7 +34,6 @@ function get_data_matrices(dna_read; k=2, FloatType=dat_t)
     return data_matrix, data_matrix_bg
 end
 
-
 function data_2_dummy(dna_sim_data_vec::Vector{sim_dna_str_w_motif}; F=Float32)
     how_many_strings = length(dna_sim_data_vec);
     @assert F <: Real "input F must be subtype of Real"
