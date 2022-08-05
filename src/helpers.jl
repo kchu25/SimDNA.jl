@@ -73,7 +73,9 @@ function get_data_matrices(dna_read;
            data_matrix_test, 
            data_matrix_bg_test,
            length(dna_read_train),
-           length(dna_read_test)
+           length(dna_read_test),
+           train_set_inds,
+           test_set_inds
 
 end
 
