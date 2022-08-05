@@ -27,11 +27,53 @@ function reverse_complement(s::String)
     join(islowercase(s[si]) ? s[si] : DNA_complement[s[si]] for si = length(s):-1:1)
 end
 
-function get_data_matrices(dna_read; k=2, FloatType=dat_t)
-    shuffled_dna_read = seq_shuffle.(dna_read; k=k);
-    data_matrix = data_2_dummy(dna_read; F=FloatType);
-    data_matrix_bg = data_2_dummy(shuffled_dna_read; F=FloatType);
-    return data_matrix, data_matrix_bg
+
+function get_train_test_inds(dna_read, train_test_split_ratio, shuffle)
+    len_dna_read = length(dna_read)
+    how_may_entries_in_test = Int(floor((1-train_test_split_ratio)*len_dna_read));
+    test_set_inds = nothing;
+    if shuffle 
+        test_set_inds = sample(1:len_dna_read, 
+                      how_may_entries_in_test, 
+                      replace=false)
+    else
+        test_set_inds = collect(len_dna_read-how_may_entries_in_test+1:len_dna_read)
+    end
+    train_set_inds = setdiff(1:len_dna_read, test_set_inds)
+    return train_set_inds, test_set_inds
+end
+
+
+function get_data_matrices(dna_read; 
+                           k=2, 
+                           train_test_split_ratio=0.85,
+                           FloatType=dat_t,
+                           shuffle=true)
+    # set train_test_split_ratio = 1.0 if no test set is needed
+    train_set_inds, test_set_inds = get_train_test_inds(dna_read, train_test_split_ratio, shuffle)
+
+    dna_read_train = @view dna_read[train_set_inds]
+    dna_read_test = @view dna_read[test_set_inds]    
+
+    shuffled_dna_read_train = seq_shuffle.(dna_read_train; k=k);
+    data_matrix_train = data_2_dummy(dna_read_train; F=FloatType);
+    data_matrix_bg_train = data_2_dummy(shuffled_dna_read_train; F=FloatType);
+
+    shuffled_dna_read_test = seq_shuffle.(dna_read_test; k=k);
+    data_matrix_test = data_2_dummy(dna_read_test; F=FloatType);
+    data_matrix_bg_test = data_2_dummy(shuffled_dna_read_test; F=FloatType);
+
+    # shuffled_dna_read = seq_shuffle.(dna_read; k=k);
+    # data_matrix = data_2_dummy(dna_read; F=FloatType);
+    # data_matrix_bg = data_2_dummy(shuffled_dna_read; F=FloatType);
+
+    return data_matrix_train, 
+           data_matrix_bg_train, 
+           data_matrix_test, 
+           data_matrix_bg_test,
+           length(dna_read_train),
+           length(dna_read_test)
+
 end
 
 function data_2_dummy(dna_sim_data_vec::Vector{sim_dna_str_w_motif}; F=Float32)
