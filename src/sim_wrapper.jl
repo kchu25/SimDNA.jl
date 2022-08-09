@@ -28,7 +28,6 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
         raw_data = sample_backgound_with_motif_multiple(motif,num_data_pts,data_pt_len,bern_prob);
         raw_data_DNA_str = [uppercase.(i.str) for i in  raw_data];
 
-
         data_matrix, data_matrix_bg, data_matrix_test, data_matrix_bg_test, 
             N_train, N_test, train_set_inds, test_set_inds = 
             get_data_matrices(raw_data_DNA_str; k=k, 
@@ -38,10 +37,15 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
                               );
         # save the simulated data as a fasta file in the target folder
         # just save the training set
-        save && save_sim_data_as_fasta(output_folder, 
+        if save 
+            save_sim_data_as_fasta(output_folder, 
                                        raw_data[train_set_inds], 
                                        N_train, 
                                        motif);
+            save_sim_data_as_fasta_test(output_folder, 
+                                        raw_data[test_set_inds], 
+                                        N_test)
+        end
 
         L, _ = size(data_matrix);
         data_matrix = reshape(data_matrix, (L,1,N_train));

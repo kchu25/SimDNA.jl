@@ -47,3 +47,25 @@ function save_sim_data_as_fasta(target_folder::String,
         end
     end
 end
+
+function save_sim_data_as_fasta_test(target_folder::String, 
+                                raw_data, 
+                                N::Integer)
+    !isdir(target_folder) && mkpath(target_folder);
+
+    strings = [raw_data[i].str for i = 1:N];
+    strings_all_upcase = [uppercase.(raw_data[i].str) for i = 1:N];
+    
+    open(target_folder*"/data_w_answer_test.fa","w") do file
+        for (ind,s) in enumerate(strings)
+            write(file, string(">sequence_", string(ind),"\n"));
+            write(file, string(s,"\n"))
+        end
+    end
+    open(target_folder*"/data_test.fa","w") do file
+        for (ind,s) in enumerate(strings_all_upcase)
+            write(file, string(">sequence_", string(ind),"\n"));
+            write(file, string(s,"\n"))
+        end
+    end
+end
