@@ -1,6 +1,7 @@
 
 ######### constants for simulated data #########
 const dat_t = Float32;          # data_matrix_type
+const int_t = Int;
 
 # concentration parameter for Dirichlet that generate Categorical Distributions
 const motif_alpha_pc = 0.1;             
