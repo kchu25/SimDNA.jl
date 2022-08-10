@@ -49,7 +49,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
 
         L, _ = size(data_matrix);
         data_matrix = reshape(data_matrix, (L,1,N_train));
-        data_matrix_test = reshape(data_matrix_test, (L,1, N_test));
+        train_test_split_ratio < 1.0 && (data_matrix_test = reshape(data_matrix_test, (L,1, N_test));)
         new(
             raw_data[train_set_inds],
             raw_data[test_set_inds],
@@ -89,7 +89,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
 
         L, _ = size(data_matrix);
         data_matrix = reshape(data_matrix, (L, 1, N_train));
-        data_matrix_test = reshape(data_matrix_test, (L, 1, N_test));
+        train_test_split_ratio < 1.0 && (data_matrix_test = reshape(data_matrix_test, (L, 1, N_test));)
         new(
             raw_data[train_set_inds], 
             raw_data[test_set_inds],
