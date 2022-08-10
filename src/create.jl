@@ -1,13 +1,11 @@
 function simulate_two_block_overlapping_motifs(;bcn=8:22, N=2000, len=100)
-    # bcn: block column number
     c1 = 1:rand(bcn)
-    overlap_ratio = round(rand(),digits=1)
+    overlap_ratio = round(rand(0.1:0.01:1),digits=1)
     overlapped_columns = Int(ceil(c1[end]*overlap_ratio))
     c2_columns = Int(round(overlapped_columns/overlap_ratio))
     c2_start = c1[end]-overlapped_columns+1
     c2 = c2_start:c2_start+c2_columns-1
-    block_modes = [c1, c2]
-    _m_ = mixture_k_block_motif(block_modes);      
+    _m_ = mixture_k_block_motif([c1, c2]);
     data = Sim_DNA{int_t, dat_t}(_m_; num_seqs=N, seq_len=len);
     @info "block lengths: ($c1, $c2)"
     @info "olap ratio: $overlap_ratio"
