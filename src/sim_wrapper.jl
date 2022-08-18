@@ -6,7 +6,9 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
     N::T
     L::T
     data_matrix::Union{Array{S,3}, Array{S,2}}
+    data_matrix_gpu::Union{CuArray{S,3}, CuArray{S,2}}
     data_matrix_bg::Union{Nothing, Array{S,3}, Array{S,2}}
+    data_matrix_bg_gpu::Union{Nothing, CuArray{S,3}, CuArray{S,2}}
     target_folder::Union{Nothing, String}
     prob_per_seq::S
     data_matrix_test::Union{Nothing, Array{S,3}, Array{S,2}}
@@ -56,7 +58,9 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
             T(N_train),
             T(L/4),
             data_matrix,
+            cu(data_matrix),
             data_matrix_bg,
+            cu(data_matrix_bg),
             output_folder,
             S(bern_prob),
             data_matrix_test,
@@ -95,7 +99,9 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
             T(N_train), 
             T(L/4),
             data_matrix, 
+            cu(data_matrix), 
             data_matrix_bg, 
+            cu(data_matrix_bg), 
             nothing, 
             S(bern_prob),
             data_matrix_test,
