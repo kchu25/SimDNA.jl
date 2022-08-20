@@ -6,7 +6,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
     N::T
     L::T
     data_matrix::Union{Array{S,3}, Array{S,2}}
-    data_matrix_gpu::Union{CuArray{S,3}, CuArray{S,2}}
+    data_matrix_gpu::Union{Nothing, CuArray{S,3}, CuArray{S,2}}
     data_matrix_bg::Union{Nothing, Array{S,3}, Array{S,2}}
     data_matrix_bg_gpu::Union{Nothing, CuArray{S,3}, CuArray{S,2}}
     target_folder::Union{Nothing, String}
@@ -75,7 +75,8 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
                           bern_prob::Real=1.0,
                           k=2, # kmer frequency in the test set
                           train_test_split_ratio=0.85,
-                          shuffle=true
+                          shuffle=true,
+                          gpu_off=false
                           ) where {T <: Integer, S <: Real}     
         raw_data = sample_backgound_with_motif_multiple(motif,num_seqs,seq_len,bern_prob);
         raw_data_DNA_str = [uppercase.(i.str) for i in  raw_data];
@@ -99,9 +100,9 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
             T(N_train), 
             T(L/4),
             data_matrix, 
-            cu(data_matrix), 
+            gpu_off ? nothing : cu(data_matrix), 
             data_matrix_bg, 
-            cu(data_matrix_bg), 
+            gpu_off ? nothing : cu(data_matrix_bg), 
             nothing, 
             S(bern_prob),
             data_matrix_test,
