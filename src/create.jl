@@ -49,19 +49,30 @@ end
 
 
 
-function simulate_two_block_gapped_motifs(output_folder::String;
+function simulate_two_or_three_block_gapped_motifs(output_folder::String;
                                           bcn=8:22, 
-                                          N=2000, 
+                                          N=3000, 
                                           train_test_split_ratio=1.0,
                                           bern_prob=1.0,
                                           gap_range=1:10,
                                           save=true,
                                           len=100)
-    c1, c2 = rand(bcn), rand(bcn)
-    gap = rand(gap_range)
-    _m_ = gapped_k_block_motif([c1,c2],[gap]);
-    data = Sim_DNA{int_t, dat_t}(_m_, N, output_folder, len, bern_prob; train_test_split_ratio=train_test_split_ratio, save=save);
-    @info "block lengths: ($c1, $c2)"
-    @info "gap: $gap"
-    return (c1,c2), gap, data
+    num_modes = rand(2:3);
+    if num_modes == 2
+        c1, c2 = rand(bcn), rand(bcn)
+        gap = rand(gap_range)
+        _m_ = gapped_k_block_motif([c1,c2],[gap]);
+        data = Sim_DNA{int_t, dat_t}(_m_, N, output_folder, len, bern_prob; train_test_split_ratio=train_test_split_ratio, save=save);
+        @info "block lengths: ($c1, $c2)"
+        @info "gap: $gap"
+        return (c1,c2), [gap], data
+    else # num_modes == 3
+        c1, c2, c3 = rand(bcn), rand(bcn), rand(bcn)
+        gap = [rand(gap_range), rand(gap_range)]
+        _m_ = gapped_k_block_motif([c1,c2,c3],gap);
+        data = Sim_DNA{int_t, dat_t}(_m_, N, output_folder, len, bern_prob; train_test_split_ratio=train_test_split_ratio, save=save);
+        @info "block lengths: ($c1, $c2, $c3)"
+        @info "gap: $gap"
+        return (c1,c2,c3), gap, data
+    end
 end

@@ -20,7 +20,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
                         output_folder::String,
                         data_pt_len::Integer=100,
                         bern_prob::Real=1.0; 
-                        k=2, # kmer frequency in the test set
+                        k=1, # kmer frequency in the test set
                         train_test_split_ratio=0.85,
                         save=false,
                         shuffle=true
@@ -73,7 +73,7 @@ mutable struct Sim_DNA{T <: Integer, S <: Real}
                           num_seqs::Integer=1000,
                           seq_len::Integer=100,
                           bern_prob::Real=1.0,
-                          k=2, # kmer frequency in the test set
+                          k=1, # kmer frequency in the test set
                           train_test_split_ratio=0.85,
                           shuffle=true,
                           gpu_off=false
